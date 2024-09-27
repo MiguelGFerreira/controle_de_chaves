@@ -6,7 +6,12 @@ const page = () => {
 				<section className="card">
 					<form action="">
 						<label htmlFor="chave">Chave</label>
-						<input type="text" id="chave" />
+						<input type="text" id="chave" list="chaves" name="chave" />
+						<datalist id="chaves">
+							<option key="01001" value="01001-Almoxarifado" />
+							<option key="01002" value="01002-2° via de WC café verde " />
+							<option key="01060" value="01060-PREDIO ADM - PRINCIPAIS" />
+						</datalist>
 						<label htmlFor="datade">Data de</label>
 						<input type="date" id="datade" />
 						<label htmlFor="dataate">Data Até</label>
