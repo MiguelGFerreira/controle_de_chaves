@@ -4,7 +4,7 @@ import { TrashIcon } from "@heroicons/react/20/solid";
 const page = () => {
 	return (
 		<div className="principal">
-			<h2>Consulta Chaves</h2>
+			<h2>Cadastro de Chaves</h2>
 			<table className="grupotristao items-center w-full">
 				<thead className="text-left">
 					<tr>

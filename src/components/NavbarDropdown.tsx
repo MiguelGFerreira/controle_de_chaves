@@ -12,7 +12,7 @@ interface Props {
 const NavbarDropdown = ({ option, pages, className }: Props) => {
 	return (
 		<div>
-			<Menu as="div" className="relative inline-block text-left">
+			<Menu>
 				<MenuButton className={`${className} flex text-white`}>
 					{option}
 					<ChevronDownIcon

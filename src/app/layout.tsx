@@ -48,10 +48,8 @@ export default function RootLayout({
       <body>
         <header>
           <Navbar className="bg-[#003B2F] text-white" pages={pages} />
-        </header>
-        <main>
+          </header>
           {children}
-        </main>
       </body>
     </html>
   );
