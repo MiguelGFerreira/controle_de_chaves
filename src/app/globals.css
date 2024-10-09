@@ -19,7 +19,7 @@ body {
 }
 
 h1 {
-	@apply text-4xl font-bold text-[#003B2F] mb-4;
+	@apply text-3xl font-bold text-[#003B2F];
 }
 
 h2 {
@@ -53,24 +53,42 @@ section {
 	@apply my-12;
 }
 
+label {
+	@apply block text-sm font-medium text-gray-700;
+}
+
+select {
+	@apply mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#003B2F] focus:border-[#003B2F] sm:text-sm;
+}
+
+button {
+	@apply bg-[#003B2F] text-white py-2 px-4 rounded-md hover:bg-[#72a83f50] transition-colors;
+}
+
 .grupotristao {
+	@apply min-w-full table-auto;
+
 	thead th {
-		@apply text-white bg-[#003B2F] text-2xl
+		@apply bg-[#003B2F] px-6 py-3 text-left text-xl font-medium text-white uppercase tracking-wider;
 	}
 
 	tbody tr {
-		@apply even:bg-[#72a83f50] odd:bg-[#72a83f24] text-black
+		@apply even:bg-[#72a83f50] odd:bg-[#72a83f24]
 	}
 
 	tbody td {
-		@apply text-lg
+		@apply px-6 py-4 text-lg
 	}
 }
 
 .principal {
-	@apply flex flex-col items-center mx-4
+	@apply p-8 space-y-8;
 }
 
 .card {
-	@apply bg-white shadow-md rounded-lg p-6 mb-6;
+	@apply space-y-6 bg-white shadow-lg p-6 rounded-md;
+}
+
+.formulario {
+	@apply grid grid-cols-3 gap-4;
 }
