@@ -1,20 +1,32 @@
+"use client"
+
 const page = () => {
 	return (
 		<div className="principal">
 			<h2>Consulta Chaves</h2>
 			<section className="card">
-				<form action="">
-					<label htmlFor="chave">Chave</label>
-					<input type="text" id="chave" list="chaves" name="chave" />
-					<datalist id="chaves">
-						<option key="01001" value="01001-Almoxarifado" />
-						<option key="01002" value="01002-2° via de WC café verde " />
-						<option key="01060" value="01060-PREDIO ADM - PRINCIPAIS" />
-					</datalist>
-					<label htmlFor="datade">Data de</label>
-					<input type="date" id="datade" />
-					<label htmlFor="dataate">Data Até</label>
-					<input type="date" id="dataate" />
+				<form action="" className="formulario">
+					<div>
+						<label htmlFor="chave">Chave</label>
+						<input type="text" id="chave" list="chaves" name="chave" />
+						<datalist id="chaves">
+							<option key="01001" value="01001-Almoxarifado" />
+							<option key="01002" value="01002-2° via de WC café verde " />
+							<option key="01060" value="01060-PREDIO ADM - PRINCIPAIS" />
+						</datalist>
+					</div>
+					<div>
+						<label htmlFor="datade">Data de</label>
+						<input type="date" id="datade" />
+					</div>
+					<div>
+						<label htmlFor="dataate">Data Até</label>
+						<input type="date" id="dataate" />
+					</div>
+
+					<button onClick={() => { }}>
+						Pesquisar
+					</button>
 				</form>
 			</section>
 			<table className="grupotristao w-full items-center">

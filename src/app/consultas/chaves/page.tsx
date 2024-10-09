@@ -2,8 +2,8 @@ const page = () => {
 	return (
 		<div className="principal">
 			<h2>Consulta Chaves</h2>
-			<table className="grupotristao items-center">
-				<thead className="text-left">
+			<table className="grupotristao">
+				<thead>
 					<tr>
 						<th>Armário</th>
 						<th>Número</th>

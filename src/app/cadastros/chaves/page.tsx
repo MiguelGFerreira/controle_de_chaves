@@ -5,8 +5,8 @@ const page = () => {
 	return (
 		<div className="principal">
 			<h2>Cadastro de Chaves</h2>
-			<table className="grupotristao items-center w-full">
-				<thead className="text-left">
+			<table className="grupotristao">
+				<thead>
 					<tr>
 						<th>Armário</th>
 						<th>Número</th>

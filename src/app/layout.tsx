@@ -25,7 +25,7 @@ const pages = [
       [
         { name: "Consulta de chaves", path: "/consultas/chaves" },
         { name: "Consulta de entregas", path: "/consultas/entregas" },
-        { name: "Entregas em aberto", path: "/consultas/entregasAbertas" },
+        { name: "Entregas em aberto", path: "/consultas/entregas/abertas" },
         { name: "Cadastro de chaves", path: "/cadastros/chaves" },
         { name: "Cadastro de permissão", path: "/cadastros/permissao" },
       ]
@@ -33,7 +33,9 @@ const pages = [
   {
     name: "Armários dos Vestiários", path: "", options:
       [
-        { name: "Consulta", path: "/propriedades" },
+        { name: "Armários Disponíveis", path: "/armarios/disponiveis" },
+        { name: "Armários Ocupados", path: "/armarios/ocupados" },
+        { name: "Histórico", path: "/armarios/historico" },
       ]
   }
 ]
