@@ -1,4 +1,23 @@
+"use client"
+
+import { getChaves } from "@/api"
+import { Chave } from "@/app/types"
+import { useEffect, useState } from "react"
+
 const page = () => {
+	const [chaves, setChaves] = useState<Chave[]>([])
+
+	async function fetchChaves() {
+		const data = await getChaves();
+		setChaves(data);
+	}
+
+	useEffect(() => {
+    fetchChaves()
+  }, [])
+
+	if (!chaves) return <div>Loading...</div>
+
 	return (
 		<div className="principal">
 			<h2>Consulta Chaves</h2>
@@ -12,30 +31,14 @@ const page = () => {
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>01</td>
-						<td>001</td>
-						<td>Almoxarifado</td>
-						<td>Sim</td>
-					</tr>
-					<tr>
-						<td>01</td>
-						<td>002</td>
-						<td>2° via de WC café verde</td>
-						<td>Não</td>
-					</tr>
-					<tr>
-						<td>01</td>
-						<td>003</td>
-						<td>Acesso telhado expedição</td>
-						<td>Não</td>
-					</tr>
-					<tr>
-						<td>01</td>
-						<td>004</td>
-						<td>Almoxarifado</td>
-						<td>Sim</td>
-					</tr>
+					{chaves.map((chave, index) => (
+            <tr key={index}>
+              <td>{chave.ARMARIO}</td>
+              <td>{chave.NUMERO}</td>
+              <td>{chave.DESCRIÇÃO}</td>
+              <td>{chave.RESTRITO}</td>
+            </tr>
+          ))}
 				</tbody>
 			</table>
 		</div>

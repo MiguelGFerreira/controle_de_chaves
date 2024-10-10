@@ -5,16 +5,17 @@ import { useState } from 'react'
 
 interface Props {
     checked: boolean | undefined
+    onChange: (value: any) => void
 }
 
-const ToggleSwitch = ({ checked }: Props) => {
-    const [enabled, setEnabled] = useState(checked);
+const ToggleSwitch = ({ checked, onChange }: Props) => {
+
 
     return (
         <Switch
-            checked={enabled}
-            onChange={setEnabled}
-            className={`group relative flex h-7 w-14 cursor-pointer rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[focus]:outline-1 ${enabled ? 'bg-[#003B2F]' : 'bg-[#72a83f50]'}`}
+            checked={checked}
+            onChange={onChange}
+            className={`group relative flex h-7 w-14 cursor-pointer rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[focus]:outline-1 ${checked ? 'bg-[#003B2F]' : 'bg-[#72a83f50]'}`}
         >
             <span
                 aria-hidden="true"

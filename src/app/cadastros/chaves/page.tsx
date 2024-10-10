@@ -1,10 +1,64 @@
+"use client"
+
+import { deleteChave, getChaves, patchChave } from "@/api";
+import { Chave } from "@/app/types";
+import Modal from "@/components/Modal";
 import ToggleSwitch from "@/components/ToggleSwitch";
-import { TrashIcon } from "@heroicons/react/20/solid";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/20/solid";
+import { useEffect, useState } from "react";
 
 const page = () => {
+	const [chaves, setChaves] = useState<Chave[]>([])
+	const [newDescricao, setNewDescricao] = useState<string>("");
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [selectedKey, setSelectedKey] = useState<Chave | null>(null);
+
+	const openModal = (key: Chave) => {
+		setSelectedKey(key);
+		setIsModalOpen(true);
+	};
+
+	const closeModal = () => {
+		setSelectedKey(null);
+		setIsModalOpen(false);
+	};
+
+	async function fetchChaves() {
+		const data = await getChaves();
+		setChaves(data);
+	}
+
+	async function handleDelete(id: string) {
+		await deleteChave(id);
+		setChaves((prevChaves) => prevChaves.filter((chave) => chave.ARMARIO + chave.NUMERO !== id));
+	}
+
+	async function handleToggleRestrito(chave: Chave) {
+		const updatedRestrito = chave.RESTRITO === "SIM" ? "NÃO" : "SIM";
+		await patchChave(chave.ARMARIO + chave.NUMERO, { restrito: updatedRestrito });
+		setChaves((prevChaves) =>
+			prevChaves.map((ch) =>
+				ch.ARMARIO + ch.NUMERO === chave.ARMARIO + chave.NUMERO ? { ...ch, RESTRITO: updatedRestrito } : ch
+			)
+		);
+	}
+
+	async function handleEditDescricao() {
+		if (selectedKey) {
+			await patchChave(selectedKey.ARMARIO + selectedKey.NUMERO, { descricao: newDescricao });
+			setSelectedKey(null);
+		}
+	}
+
+	useEffect(() => {
+		fetchChaves()
+	}, [])
+
+	if (!chaves) return <div>Loading...</div>
+
 	return (
 		<div className="principal">
-			<h2>Cadastro de Chaves</h2>
+			<h1>Cadastro de Chaves</h1>
 			<table className="grupotristao">
 				<thead>
 					<tr>
@@ -16,36 +70,53 @@ const page = () => {
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>01</td>
-						<td>001</td>
-						<td>Almoxarifado</td>
-						<td><ToggleSwitch checked={true} /></td>
-						<td><TrashIcon className="size-8 hover:cursor-pointer" /></td>
-					</tr>
-					<tr>
-						<td>01</td>
-						<td>002</td>
-						<td>2° via de WC café verde</td>
-						<td><ToggleSwitch checked={false} /></td>
-						<td><TrashIcon className="size-8 hover:cursor-pointer" /></td>
-					</tr>
-					<tr>
-						<td>01</td>
-						<td>003</td>
-						<td>Acesso telhado expedição</td>
-						<td><ToggleSwitch checked={false} /></td>
-						<td><TrashIcon className="size-8 hover:cursor-pointer" /></td>
-					</tr>
-					<tr>
-						<td>01</td>
-						<td>004</td>
-						<td>Almoxarifado</td>
-						<td><ToggleSwitch checked={true} /></td>
-						<td><TrashIcon className="size-8 hover:cursor-pointer" /></td>
-					</tr>
+					{chaves.map((chave, index) => (
+						<tr key={index}>
+							<td>{chave.ARMARIO}</td>
+							<td>{chave.NUMERO}</td>
+							<td>
+								{chave.DESCRIÇÃO}
+								<PencilSquareIcon
+									className="w-5 h-5 inline ml-2 hover:cursor-pointer"
+									onClick={() => openModal(chave)}
+								/>
+							</td>
+							<td>
+								<ToggleSwitch
+									checked={chave.RESTRITO === 'SIM'}
+									onChange={() => handleToggleRestrito(chave)}
+								/>
+							</td>
+							<td>
+								<TrashIcon
+									className="size-8 hover:cursor-pointer"
+									onClick={() => handleDelete(chave.ARMARIO + chave.NUMERO)}
+								/>
+							</td>
+						</tr>
+					))}
 				</tbody>
 			</table>
+
+			{selectedKey && (
+				<Modal
+					isOpen={isModalOpen}
+					closeModal={closeModal}
+					title={`Editar descrição da chave ${selectedKey?.DESCRIÇÃO}`}
+				>
+					<h2>Nova Descrição</h2>
+					<input
+						type="text"
+						value={newDescricao}
+						onChange={(e) => setNewDescricao(e.target.value)}
+						className="input"
+					/>
+					<button onClick={handleEditDescricao} className="button">
+						Salvar
+					</button>
+				</Modal>
+
+			)}
 		</div>
 	)
 }

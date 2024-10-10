@@ -1,26 +1,38 @@
 "use client"
 
+import { getChaves, getEntregas } from '@/api';
+import { Chave, Entregas } from '@/app/types';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const Page = () => {
-  const entregas = [
-    {
-      id: 4480,
-      dataEntrega: '26/09/2024 07:18:51',
-      dataDevolucao: '26/09/2024 07:23:48',
-      chave: '01060 - PREDIO ADM - PRINCIPAIS',
-      funcionario: '027331 - JOAO PAULO GERA DE SOUZA',
-      porteiro: 'VALDINEI NEVES DE OLIVEIRA',
-    },
-    {
-      id: 4481,
-      dataEntrega: '26/09/2024 08:00:00',
-      dataDevolucao: '26/09/2024 08:30:00',
-      chave: '01002 - 2° via de WC café verde',
-      funcionario: '027332 - MARIA JOAQUINA SOUZA',
-      porteiro: 'JOSE ALVES DE OLIVEIRA',
-    },
-  ];
+  const [entregas, setEntregas] = useState<Entregas[]>([]);
+  const [chaves, setChaves] = useState<Chave[]>([])
+  const [filter, setFilter] = useState({
+    chave: "",
+    dateStart: new Date().toISOString().split('T')[0],
+    dateEnd: "",
+  });
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFilter({ ...filter, [name]: value });
+  };
+
+  async function fetchEntregas() {
+    const data = await getEntregas(filter);
+    setEntregas(data);
+  }
+
+  async function fetchChaves() {
+		const data = await getChaves();
+		setChaves(data);
+	}
+
+  useEffect(() => {
+    fetchEntregas()
+    fetchChaves()
+  }, [])
 
   return (
     <div className="principal">
@@ -29,23 +41,29 @@ const Page = () => {
         <form action="" className="formulario">
           <div>
             <label htmlFor="chave">Chave</label>
-            <input type="text" id="chave" list="chaves" name="chave" />
+            <input type="text" id="chave" list="chaves" name="chave" onChange={handleFilterChange} />
             <datalist id="chaves">
-              <option key="01001" value="01001-Almoxarifado" />
-              <option key="01002" value="01002-2° via de WC café verde " />
-              <option key="01060" value="01060-PREDIO ADM - PRINCIPAIS" />
+              {chaves.map((chave) => (
+                <option value={chave.ARMARIO + chave.NUMERO}>{chave.ARMARIO + chave.NUMERO + ' - ' + chave.DESCRIÇÃO}</option>
+              ))}
             </datalist>
           </div>
           <div>
-            <label htmlFor="datade">Data de</label>
-            <input type="date" id="datade" />
+            <label htmlFor="dateStart">Data de</label>
+            <input type="date" id="dateStart" name="dateStart" onChange={handleFilterChange} />
           </div>
           <div>
-            <label htmlFor="dataate">Data Até</label>
-            <input type="date" id="dataate" />
+            <label htmlFor="dateEnd">Data Até</label>
+            <input type="date" id="dateEnd" name="dateEnd" onChange={handleFilterChange} />
           </div>
 
-          <button onClick={() => { }}>
+          <button
+            type='button'
+            onClick={(e) => {
+              e.preventDefault();
+              fetchEntregas();
+            }}
+          >
             Pesquisar
           </button>
         </form>
@@ -64,17 +82,17 @@ const Page = () => {
         </thead>
         <tbody>
           {entregas.map((entrega) => (
-            <tr key={entrega.id}>
+            <tr key={entrega.ID}>
               <td>
-                <Link href={`/consultas/entregas/${entrega.id}`}>
-                  {entrega.id}
+                <Link href={`/consultas/entregas/${entrega.ID}`}>
+                  {entrega.ID}
                 </Link>
               </td>
-              <td>{entrega.dataEntrega}</td>
-              <td>{entrega.dataDevolucao}</td>
-              <td>{entrega.chave}</td>
-              <td>{entrega.funcionario}</td>
-              <td>{entrega.porteiro}</td>
+              <td>{entrega.DATA_ENTREGA}</td>
+              <td>{entrega.DATA_DEVOLUCAO}</td>
+              <td>{entrega.ID_CHAVE}</td>
+              <td>{entrega.FUNCIONARIO}</td>
+              <td>{entrega.PORTEIRO}</td>
             </tr>
           ))}
         </tbody>
