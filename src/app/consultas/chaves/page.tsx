@@ -13,8 +13,8 @@ const page = () => {
 	}
 
 	useEffect(() => {
-    fetchChaves()
-  }, [])
+		fetchChaves()
+	}, [])
 
 	if (!chaves) return <div>Loading...</div>
 
@@ -32,13 +32,13 @@ const page = () => {
 				</thead>
 				<tbody>
 					{chaves.map((chave, index) => (
-            <tr key={index}>
-              <td>{chave.ARMARIO}</td>
-              <td>{chave.NUMERO}</td>
-              <td>{chave.DESCRIÇÃO}</td>
-              <td>{chave.RESTRITO}</td>
-            </tr>
-          ))}
+						<tr key={index}>
+							<td>{chave.ARMARIO}</td>
+							<td>{chave.NUMERO}</td>
+							<td>{chave.DESCRIÇÃO}</td>
+							<td>{chave.RESTRITO}</td>
+						</tr>
+					))}
 				</tbody>
 			</table>
 		</div>

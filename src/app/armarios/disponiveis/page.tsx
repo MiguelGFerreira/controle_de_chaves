@@ -1,18 +1,16 @@
 "use client"
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Modal from '@/components/Modal'
+import { getArmarios, patchArmarios } from '@/api';
+import { Armario } from '@/app/types';
 
-// Dados simulados para armários
-const armariosFeminino = ['Armário 101', 'Armário 102', 'Armário 103'];
-const armariosMasculino = ['Armário 201', 'Armário 202', 'Armário 203'];
-
-// Dados simulados para setores
-const setores = ['RH', 'TI', 'Contabilidade', 'Produção', 'Logística'];
+const setores = ['ABE - Cozinha Industrial', 'ABE - Jardim', 'ABE - Serviços Gerais', 'Comercial - Cafuso', 'Comercial - Reserva', 'Contábil/Fiscal', 'Controladoria', 'Controle de Qualidade', 'Cultura e Gente', 'Financeiro', 'Jurídico', 'Logística - Mercado Externo', 'Logística - Mercado Interno', 'Manutenção - Civil', 'Manutenção - Elétrica', 'Manutenção - Mecânica', 'Manutenção - Utilidades', 'Meio Ambiente', 'TI', 'RH', 'SESMT', 'Suprimentos', 'PCM', 'Produção', 'Tristão Trading - Armazém', 'Tristão Trading - Escritório'];
 
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedArmario, setSelectedArmario] = useState<string | null>(null);
+  const [armarios, setArmarios] = useState<Armario[]>([]);
+  const [selectedArmario, setSelectedArmario] = useState<Armario | null>(null);
   const [nome, setNome] = useState('');
   const [matricula, setMatricula] = useState('');
   const [setor, setSetor] = useState('');
@@ -20,8 +18,9 @@ const Page = () => {
   const [superior, setSuperior] = useState('');
   const [data, setData] = useState(new Date().toISOString().split('T')[0])
 
-  const handleOpenModal = (armario: string) => {
-    setSelectedArmario(armario);
+  const handleOpenModal = (armario: number) => {
+    const selected = armarios.filter((perm) => perm.ID === armario)
+    setSelectedArmario(selected[0]);
     setIsModalOpen(true);
   };
 
@@ -30,18 +29,20 @@ const Page = () => {
     setIsModalOpen(false);
   };
 
-  const handleSubmit = () => {
-    // Lógica para salvar os dados do novo usuário no armário selecionado
-    console.log({
-      armario: selectedArmario,
-      nome,
-      matricula,
-      setor,
-      funcao,
-      superior,
-    });
+  const handleSubmit = async () => {
+    await patchArmarios(selectedArmario?.ID, data, nome, matricula, setor, funcao, superior, selectedArmario?.STATUS);
     closeModal();
+    fetchArmarios();
   };
+
+  async function fetchArmarios() {
+    const data = await getArmarios();
+    setArmarios(data);
+  }
+
+  useEffect(() => {
+    fetchArmarios()
+  }, [])
 
   return (
     <div className="principal">
@@ -52,10 +53,12 @@ const Page = () => {
         <div>
           <h2>Feminino</h2>
           <ul className="space-y-4">
-            {armariosFeminino.map((armario) => (
-              <li key={armario} className="p-4 border bg-white shadow-sm cursor-pointer" onClick={() => handleOpenModal(armario)}>
-                {armario} - Livre
-              </li>
+            {armarios.map((armario) => (
+              (armario.Genero === 'F' && armario.STATUS === '0') && (
+                <li key={armario.ID} className="p-4 border bg-white shadow-sm cursor-pointer" onClick={() => handleOpenModal(armario.ID)}>
+                  {armario.Numero} - Livre
+                </li>
+              )
             ))}
           </ul>
         </div>
@@ -64,10 +67,12 @@ const Page = () => {
         <div>
           <h2>Masculino</h2>
           <ul className="space-y-4">
-            {armariosMasculino.map((armario) => (
-              <li key={armario} className="p-4 border bg-white shadow-sm cursor-pointer" onClick={() => handleOpenModal(armario)}>
-                {armario} - Livre
-              </li>
+            {armarios.map((armario) => (
+              (armario.Genero === 'M' && armario.STATUS === '0') && (
+                <li key={armario.ID} className="p-4 border bg-white shadow-sm cursor-pointer" onClick={() => handleOpenModal(armario.ID)}>
+                  {armario.Numero} - Livre
+                </li>
+              )
             ))}
           </ul>
         </div>
@@ -84,7 +89,7 @@ const Page = () => {
                   type="date"
                   id="data"
                   value={data}
-				  onChange={(e) => setData(e.target.value)}
+                  onChange={(e) => setData(e.target.value)}
                 />
               </div>
 

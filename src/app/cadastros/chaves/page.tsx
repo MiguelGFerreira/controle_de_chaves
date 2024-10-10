@@ -35,20 +35,20 @@ const page = () => {
 
 	async function handleDelete(id: string) {
 		await deleteChave(id);
-		location.reload();
+		fetchChaves();
 	}
 
 	async function handleToggleRestrito(chave: Chave) {
 		const updatedRestrito = chave.RESTRITO === "SIM" ? "N" : "S";
 		await patchChave(chave.ARMARIO + chave.NUMERO, { restrito: updatedRestrito });
-		location.reload();
+		fetchChaves();
 	}
 
 	async function handleEditDescricao() {
 		if (selectedKey) {
 			await patchChave(selectedKey.ARMARIO + selectedKey.NUMERO, { descricao: newDescricao });
 			setSelectedKey(null);
-			location.reload();
+			fetchChaves();
 		}
 	}
 
@@ -60,7 +60,7 @@ const page = () => {
 
 	async function handleAddKey() {
 		await postChave(armario, newKey, description, restrito);
-		location.reload();
+		fetchChaves();
 	}
 
 	return (

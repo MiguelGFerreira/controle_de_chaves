@@ -58,7 +58,8 @@ const Page = () => {
 
 	const handleDelete = async (chave: string, matricula: string) => {
 		await deletePermissao(chave, matricula);
-		location.reload();
+		fetchChavesRestritas()
+		fetchPermissions()
 	}
 
 	async function fetchChaves() {

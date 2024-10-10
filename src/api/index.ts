@@ -193,7 +193,7 @@ export const postPermissao = async (armario: string, numero: string, funcionario
 	myHeaders.append("Content-Type", "application/json");
 
 	const raw = JSON.stringify({
-		"idchave": armario+numero,
+		"idchave": armario + numero,
 		"matricula": funcionario,
 	});
 
@@ -211,3 +211,92 @@ export const postPermissao = async (armario: string, numero: string, funcionario
 		.then(result => console.log(result))
 		.catch(error => console.log('error', error));
 }
+
+export const getArmarios = async () => {
+	try {
+		const res = await fetch('http://localhost:8000/armarios')
+		const data = await res.json()
+
+		return data;
+	} catch (error) {
+		console.error('Erro ao buscar armarios:', error)
+	}
+}
+
+export const getArmariosDet = async () => {
+	try {
+		const res = await fetch('http://localhost:8000/armarios/det')
+		const data = await res.json()
+
+		return data;
+	} catch (error) {
+		console.error('Erro ao buscar armarios:', error)
+	}
+}
+
+export const patchArmarios = async (id: number | undefined, data: string, nome: string, matricula: string, setor: string, funcao: string, superior: string, status: string | undefined) => {
+	const myHeaders = new Headers();
+	myHeaders.append("Content-Type", "application/json");
+	let raw = JSON.stringify({});
+
+	const url = `http://localhost:8000/armarios/${id}`
+
+	if (status === '0') {
+		raw = JSON.stringify({
+			"dataEntrega": data,
+			"nome": nome,
+			"matricula": matricula,
+			"setor": setor,
+			"funcao": funcao,
+			"superior": superior,
+			"status": "1",
+		});
+	} else {
+		raw = JSON.stringify({
+			"dataDevolucao": data,
+			"nome": nome,
+			"matricula": matricula,
+			"setor": setor,
+			"funcao": funcao,
+			"superior": superior,
+			"status": "0",
+		});
+	}
+
+	console.log(raw);
+
+	try {
+		await fetch(url, {
+			method: 'PATCH',
+			headers: myHeaders,
+			body: raw,
+			redirect: 'follow',
+		});
+	} catch (error) {
+		console.error('Falha ao atualizar chave: ', error);
+	}
+}
+
+export const getEntregaById = async (id: string) => {
+	try {
+		const res = await fetch(`http://localhost:8000/entregas/${id}`);
+		const data = await res.json();
+
+		const assinaturaFuncionarioRes = await fetch(`http://localhost:8000/entregas/${id}/assinatura-funcionario`);
+		const assinaturaPorteiroRes = await fetch(`http://localhost:8000/entregas/${id}/assinatura-porteiro`);
+
+		const assinaturaFuncionarioBuffer = await assinaturaFuncionarioRes.arrayBuffer();
+		const assinaturaPorteiroBuffer = await assinaturaPorteiroRes.arrayBuffer();
+
+		const assinaturaFuncionarioBase64 = `data:image/png;base64, ${Buffer.from(assinaturaFuncionarioBuffer).toString('base64')}`;
+		const assinaturaPorteiroBase64 = `data:image/png;base64, ${Buffer.from(assinaturaPorteiroBuffer).toString('base64')}`;
+
+		return {
+			...data,
+			assinaturaFuncionario: assinaturaFuncionarioBase64,
+			assinaturaPorteiro: assinaturaPorteiroBase64
+		};
+	} catch (error) {
+		console.error('Erro ao buscar entrega:', error);
+	}
+};
