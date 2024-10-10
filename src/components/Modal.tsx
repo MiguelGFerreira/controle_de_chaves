@@ -35,11 +35,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, closeModal, title, children }) =>
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <DialogPanel className="w-full max-w-lg transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all">
                 <DialogTitle as="h3" className="text-lg font-medium leading-6 text-[#003B2F]">
                   {title}
                 </DialogTitle>
-                <div className="mt-4">{children}</div>
+                <div className="mt-4 space-y-4">{/* Aqui aumentamos o espaçamento entre os itens */}
+                  {children}
+                </div>
                 <div className="mt-6 flex justify-end">
                   <button
                     type="button"

@@ -1,52 +1,34 @@
 "use client"
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from '@/components/Modal';
+import { deletePermissao, getChaves, getChavesRestritas, getEmployees, getPermissions, postPermissao } from '@/api';
+import { Chave } from '@/app/types';
 
 // Tipagem
 interface Employee {
 	matricula: string;
-	name: string;
+	nome: string;
 }
 
 interface Permission {
-	cabinet: string;
-	key: string;
-	employee: Employee;
+	ARMARIO: string;
+	NUMERO: string;
+	DESCRIÇÃO: string;
+	FUNCIONARIO: Employee;
 }
 
-// Dados simulados
-const cabinets = ['01', '02', '03'];
-const keysByCabinet: Record<string, string[]> = {
-	'01': ['Chave A', 'Chave B', 'Chave C'],
-	'02': ['Chave D', 'Chave E'],
-	'03': ['Chave F', 'Chave G', 'Chave H']
-};
-
-const employees: Employee[] = [
-	{ matricula: '001', name: 'João Silva' },
-	{ matricula: '002', name: 'Maria Oliveira' },
-	{ matricula: '003', name: 'Carlos Pereira' },
-	{ matricula: '004', name: 'Ana Souza' }
-];
-
-// Permissões já cadastradas
-const initialPermissions: Permission[] = [
-	{ cabinet: '01', key: 'Chave A', employee: { matricula: '001', name: 'João Silva' } },
-	{ cabinet: '01', key: 'Chave A', employee: { matricula: '001', name: 'João Pedro' } },
-	{ cabinet: '02', key: 'Chave D', employee: { matricula: '002', name: 'Maria Oliveira' } },
-	{ cabinet: '03', key: 'Chave F', employee: { matricula: '003', name: 'Carlos Pereira' } },
-	{ cabinet: '01', key: 'Chave B', employee: { matricula: '004', name: 'Ana Souza' } }
-];
-
 const Page = () => {
-	const [permissions, setPermissions] = useState<Permission[]>(initialPermissions);
+	const [permissions, setPermissions] = useState<Permission[]>([]);
+	const [keysByCabinet, setKeysByCabinet] = useState<Record<string, string[]>>({});
+	const [chavesRestritas, setChavesRestritas] = useState<Chave[]>([]);
 	const [newCabinet, setNewCabinet] = useState<string | null>(null);
 	const [newKey, setNewKey] = useState<string | null>(null);
 	const [newEmployee, setNewEmployee] = useState<string | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedKey, setSelectedKey] = useState<string | null>(null);
 	const [selectedCabinet, setSelectedCabinet] = useState<string | null>(null);
+	const [employees, setEmployees] = useState<Employee[]>([]);
 
 	const openModal = (cabinet: string, key: string) => {
 		setSelectedCabinet(cabinet);
@@ -60,26 +42,60 @@ const Page = () => {
 		setIsModalOpen(false);
 	};
 
-	const employeesWithPermission = (cabinet: string, key: string) =>
-		permissions.filter((perm) => perm.cabinet === cabinet && perm.key === key);
+	const employeesWithPermission = (cabinet: string, key: string) => {
+		return permissions.filter((perm) => perm.ARMARIO === cabinet && perm.NUMERO === key);
+	}
 
-	const handleAddPermission = () => {
+	const handleAddPermission = async () => {
 		if (newCabinet && newKey && newEmployee) {
-			const selectedEmployee = employees.find(emp => emp.matricula === newEmployee);
-			if (selectedEmployee) {
-				const newPermission: Permission = {
-					cabinet: newCabinet,
-					key: newKey,
-					employee: selectedEmployee
-				};
-				setPermissions([...permissions, newPermission]);
-				// Resetar o formulário
-				setNewCabinet(null);
-				setNewKey(null);
-				setNewEmployee(null);
-			}
+			const idchave = newKey.split(' ')[0]
+			await postPermissao(newCabinet, idchave, newEmployee)
+			setNewCabinet(null);
+			setNewKey(null);
+			setNewEmployee(null);
 		}
 	};
+
+	const handleDelete = async (chave: string, matricula: string) => {
+		await deletePermissao(chave, matricula);
+		location.reload();
+	}
+
+	async function fetchChaves() {
+		const data: Chave[] = await getChaves();
+
+		const keysByCabinet: Record<string, string[]> = data.reduce((acc: Record<string, string[]>, item: Chave) => {
+			if (!acc[item.ARMARIO]) {
+				acc[item.ARMARIO] = [];
+			}
+			acc[item.ARMARIO].push(`${item.NUMERO} - ${item.DESCRIÇÃO}`);
+			return acc;
+		}, {});
+
+		setKeysByCabinet(keysByCabinet);
+	}
+
+	async function fetchChavesRestritas() {
+		const data = await getChavesRestritas();
+		setChavesRestritas(data);
+	}
+
+	async function fetchPermissions() {
+		const data = await getPermissions();
+		setPermissions(data);
+	}
+
+	async function fetchEmployees() {
+		const data = await getEmployees();
+		setEmployees(data);
+	}
+
+	useEffect(() => {
+		fetchChaves()
+		fetchChavesRestritas()
+		fetchPermissions()
+		fetchEmployees()
+	}, [])
 
 	return (
 		<div className="principal">
@@ -97,11 +113,9 @@ const Page = () => {
 							onChange={(e) => setNewCabinet(e.target.value)}
 						>
 							<option value="">Selecione um armário</option>
-							{cabinets.map((cabinet) => (
-								<option key={cabinet} value={cabinet}>
-									Armário {cabinet}
-								</option>
-							))}
+							<option value="01">Armário 01</option>
+							<option value="02">Armário 02</option>
+							<option value="03">Armário 03</option>
 						</select>
 					</div>
 
@@ -114,7 +128,7 @@ const Page = () => {
 							disabled={!newCabinet}
 						>
 							<option value="">Selecione uma chave</option>
-							{newCabinet && keysByCabinet[newCabinet].map((key) => (
+							{newCabinet && keysByCabinet[newCabinet]?.map((key: string) => (
 								<option key={key} value={key}>
 									{key}
 								</option>
@@ -135,7 +149,7 @@ const Page = () => {
 						<datalist id="employeeList">
 							{employees.map((employee) => (
 								<option key={employee.matricula} value={employee.matricula}>
-									{employee.name} ({employee.matricula})
+									{employee.nome}
 								</option>
 							))}
 						</datalist>
@@ -154,33 +168,29 @@ const Page = () => {
 						<tr>
 							<th>Armário</th>
 							<th>Chave</th>
-							<th>Funcionário</th>
+							<th>Descrição</th>
 							<th>Ação</th>
 						</tr>
 					</thead>
 					<tbody>
-						{Object.entries(keysByCabinet).map(([cabinet, keys]) =>
-							keys.map((key) => (
-								<tr key={key}>
-									<td>{cabinet}</td>
-									<td>{key}</td>
-									<td>
-										{employeesWithPermission(cabinet, key).length} funcionários
-									</td>
-									<td>
-										<button onClick={() => openModal(cabinet, key)}>
-											Ver detalhes
-										</button>
-									</td>
-								</tr>
-							))
-						)}
+						{chavesRestritas.map((permission, idx) => (
+							<tr key={`${permission.ARMARIO}-${permission.NUMERO}-${idx}`}>
+								<td>{permission.ARMARIO}</td>
+								<td>{permission.NUMERO}</td>
+								<td>{permission.DESCRIÇÃO}</td>
+								<td>
+									<button onClick={() => openModal(permission.ARMARIO, permission.NUMERO)}>
+										Ver detalhes
+									</button>
+								</td>
+							</tr>
+						))}
 					</tbody>
 				</table>
 			</div>
 
 
-			{/* Modal */}
+			{/* Modal para exibir funcionários com permissão */}
 			{selectedKey && selectedCabinet && (
 				<Modal
 					isOpen={isModalOpen}
@@ -189,10 +199,11 @@ const Page = () => {
 				>
 					<ul className="space-y-2">
 						{employeesWithPermission(selectedCabinet, selectedKey).map((perm, idx) => (
-							<li key={idx} className="flex justify-between items-center">
-								<span>{perm.employee.name} - {perm.employee.matricula}</span>
+							<li key={idx} className="flex justify-between items-center py-2 border-b border-gray-200">
+								<span className="font-medium">{perm.FUNCIONARIO.nome} - {perm.FUNCIONARIO.matricula}</span>
 								<button
-									className="bg-red-600 text-white py-1 px-2 rounded-md hover:bg-red-700"
+									className="bg-red-600 text-white py-1 px-3 rounded-md hover:bg-red-700"
+									onClick={() => handleDelete(`${selectedCabinet}${selectedKey}`, perm.FUNCIONARIO.matricula)}
 								>
 									Excluir
 								</button>
