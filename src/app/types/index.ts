@@ -47,3 +47,13 @@ export interface ArmarioDet {
 	DataDevolucao: string,
 	STATUS: string
 }
+
+export interface MovimentacaoArmario {
+	ID: number,
+	Numero: string,
+	Genero: string,
+	Matricula: string,
+	Nome: string,
+	DataMovimentacao: string,
+	TipoMovimentacao: string,
+}

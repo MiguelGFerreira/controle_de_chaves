@@ -301,4 +301,15 @@ export const getEntregaById = async (id: string) => {
 	} catch (error) {
 		console.error('Erro ao buscar entrega:', error);
 	}
-};
+}
+
+export const getMovimentacoesArmarios = async () => {
+	try {
+		const res = await fetch(`${API_URL}/armarios/movimentacoes`)
+		const data = await res.json()
+
+		return data;
+	} catch (error) {
+		console.error('Erro ao buscar movimentacoes:', error)
+	}
+}
