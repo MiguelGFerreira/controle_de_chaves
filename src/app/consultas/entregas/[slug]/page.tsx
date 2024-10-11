@@ -14,11 +14,9 @@ const page = ({ params }: { params: { slug: string } }) => {
 
 	async function fetchEntrega() {
 		const data = await getEntregaById(slug);
-		console.log(data);
 		setEntrega(data[0]);
 		setAssinaturaFunc(data.assinaturaFuncionario);
 		setAssinaturaPort(data.assinaturaPorteiro);
-		console.log(assinaturaFunc)
 	}
 
 	useEffect(() => {

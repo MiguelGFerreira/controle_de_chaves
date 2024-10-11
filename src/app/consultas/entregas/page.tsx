@@ -36,7 +36,7 @@ const Page = () => {
 
   return (
     <div className="principal">
-      <h2>Consulta Chaves</h2>
+      <h1>Consulta Entregas</h1>
       <section className="card">
         <form action="" className="formulario">
           <div>

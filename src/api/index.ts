@@ -1,6 +1,10 @@
+import axios from "axios";
+
+const API_URL = "http://localhost:8000";
+
 export const getChaves = async () => {
 	try {
-		const res = await fetch('http://localhost:8000/chaves')
+		const res = await fetch(`${API_URL}/chaves`)
 		const data = await res.json()
 
 		return data;
@@ -11,7 +15,7 @@ export const getChaves = async () => {
 
 export const getChavesRestritas = async () => {
 	try {
-		const res = await fetch('http://localhost:8000/chaves/restritas')
+		const res = await fetch(`${API_URL}/chaves/restritas`)
 		const data = await res.json()
 
 		return data;
@@ -35,7 +39,7 @@ export const getEntregas = async (filters: { chave?: string, dateStart?: string,
 		query.append('dateEnd', filters.dateEnd);
 	}
 
-	const res = await fetch(`http://localhost:8000/entregas?${query.toString()}`)
+	const res = await fetch(`${API_URL}/entregas?${query.toString()}`)
 
 	if (!res.ok) {
 		throw new Error('Falha ao buscar dados');
@@ -59,7 +63,7 @@ export const getEntregasAbertas = async (filters: { chave?: string, dateStart?: 
 		query.append('dateEnd', filters.dateEnd);
 	}
 
-	const res = await fetch(`http://localhost:8000/entregas/abertas?${query.toString()}`)
+	const res = await fetch(`${API_URL}/entregas/abertas?${query.toString()}`)
 
 	if (!res.ok) {
 		throw new Error('Falha ao buscar dados');
@@ -73,7 +77,7 @@ export const patchChave = async (id: string, operacao: { restrito?: string, desc
 	myHeaders.append("Content-Type", "application/json");
 	let raw = JSON.stringify({});
 
-	const url = `http://localhost:8000/chaves/${id}`
+	const url = `${API_URL}/chaves/${id}`
 
 	if (operacao.restrito) {
 		raw = JSON.stringify({
@@ -101,7 +105,7 @@ export const patchChave = async (id: string, operacao: { restrito?: string, desc
 }
 export const deleteChave = async (id: string) => {
 	const raw = "";
-	const url = `http://localhost:8000/chaves/${id}`
+	const url = `${API_URL}/chaves/${id}`
 
 	try {
 		await fetch(url, {
@@ -127,7 +131,7 @@ export const postChave = async (armario: string, numero: string, descricao: stri
 	});
 
 	fetch(
-		`http://localhost:8000/chaves`,
+		`${API_URL}/chaves`,
 		{
 			method: 'POST',
 			headers: myHeaders,
@@ -141,7 +145,7 @@ export const postChave = async (armario: string, numero: string, descricao: stri
 
 export const getPermissions = async () => {
 	try {
-		const res = await fetch('http://localhost:8000/permissao')
+		const res = await fetch(`${API_URL}/permissao`)
 		const data = await res.json()
 
 		const permissions = data.map((row: { ARMARIO: string; NUMERO: string; DESCRIÇÃO: string; MATRICULA: string; NOME: string; }) => ({
@@ -164,7 +168,7 @@ export const getPermissions = async () => {
 
 export const getEmployees = async () => {
 	try {
-		const res = await fetch('http://localhost:8000/permissao/funcionarios')
+		const res = await fetch(`${API_URL}/permissao/funcionarios`)
 		const data = await res.json()
 
 		return data;
@@ -175,7 +179,7 @@ export const getEmployees = async () => {
 
 export const deletePermissao = async (idchave: string, matricula: string) => {
 	const raw = "";
-	const url = `http://localhost:8000/permissao/${matricula}/${idchave}`
+	const url = `${API_URL}/permissao/${matricula}/${idchave}`
 
 	try {
 		await fetch(url, {
@@ -200,7 +204,7 @@ export const postPermissao = async (armario: string, numero: string, funcionario
 	console.log(raw);
 
 	fetch(
-		`http://localhost:8000/permissao`,
+		`${API_URL}/permissao`,
 		{
 			method: 'POST',
 			headers: myHeaders,
@@ -214,7 +218,7 @@ export const postPermissao = async (armario: string, numero: string, funcionario
 
 export const getArmarios = async () => {
 	try {
-		const res = await fetch('http://localhost:8000/armarios')
+		const res = await fetch(`${API_URL}/armarios`)
 		const data = await res.json()
 
 		return data;
@@ -225,7 +229,7 @@ export const getArmarios = async () => {
 
 export const getArmariosDet = async () => {
 	try {
-		const res = await fetch('http://localhost:8000/armarios/det')
+		const res = await fetch(`${API_URL}/armarios/det`)
 		const data = await res.json()
 
 		return data;
@@ -239,7 +243,7 @@ export const patchArmarios = async (id: number | undefined, data: string, nome: 
 	myHeaders.append("Content-Type", "application/json");
 	let raw = JSON.stringify({});
 
-	const url = `http://localhost:8000/armarios/${id}`
+	const url = `${API_URL}/armarios/${id}`
 
 	if (status === '0') {
 		raw = JSON.stringify({
@@ -279,22 +283,20 @@ export const patchArmarios = async (id: number | undefined, data: string, nome: 
 
 export const getEntregaById = async (id: string) => {
 	try {
-		const res = await fetch(`http://localhost:8000/entregas/${id}`);
+		const res = await fetch(`${API_URL}/entregas/${id}`);
 		const data = await res.json();
 
-		const assinaturaFuncionarioRes = await fetch(`http://localhost:8000/entregas/${id}/assinatura-funcionario`);
-		const assinaturaPorteiroRes = await fetch(`http://localhost:8000/entregas/${id}/assinatura-porteiro`);
+		const assinaturaFuncionarioRes = await axios.get(`${API_URL}/entregas/${id}/assinatura-funcionario`, { responseType: 'blob' });
+		const assinaturaFuncionarioURL = URL.createObjectURL(assinaturaFuncionarioRes.data);
 
-		const assinaturaFuncionarioBuffer = await assinaturaFuncionarioRes.arrayBuffer();
-		const assinaturaPorteiroBuffer = await assinaturaPorteiroRes.arrayBuffer();
+		const assinaturaPorteiroRes = await axios.get(`${API_URL}/entregas/${id}/assinatura-porteiro`, { responseType: 'blob' });
+		const assinaturaPorteiroURL = URL.createObjectURL(assinaturaPorteiroRes.data);
 
-		const assinaturaFuncionarioBase64 = `data:image/png;base64, ${Buffer.from(assinaturaFuncionarioBuffer).toString('base64')}`;
-		const assinaturaPorteiroBase64 = `data:image/png;base64, ${Buffer.from(assinaturaPorteiroBuffer).toString('base64')}`;
 
 		return {
 			...data,
-			assinaturaFuncionario: assinaturaFuncionarioBase64,
-			assinaturaPorteiro: assinaturaPorteiroBase64
+			assinaturaFuncionario: assinaturaFuncionarioURL,
+			assinaturaPorteiro: assinaturaPorteiroURL
 		};
 	} catch (error) {
 		console.error('Erro ao buscar entrega:', error);

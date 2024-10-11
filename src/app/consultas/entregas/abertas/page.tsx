@@ -1,6 +1,6 @@
 "use client"
 
-import { getEntregas, getChaves } from "@/api";
+import { getChaves, getEntregasAbertas } from "@/api";
 import { Entregas, Chave } from "@/app/types";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -20,7 +20,7 @@ const page = () => {
 	};
 
 	async function fetchEntregas() {
-		const data = await getEntregas(filter);
+		const data = await getEntregasAbertas(filter);
 		setEntregas(data);
 	}
 
