@@ -2,6 +2,7 @@
 
 import { getChaves, getEntregasAbertas } from "@/api";
 import { Entregas, Chave } from "@/app/types";
+import { formatarData } from "@/utils";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
@@ -74,7 +75,6 @@ const page = () => {
 					<tr>
 						<th>ID</th>
 						<th>Data Entrega</th>
-						<th>Data Devolução</th>
 						<th>Chave</th>
 						<th>Funcionário</th>
 						<th>Porteiro</th>
@@ -88,8 +88,7 @@ const page = () => {
 									{entrega.ID}
 								</Link>
 							</td>
-							<td>{entrega.DATA_ENTREGA}</td>
-							<td>{entrega.DATA_DEVOLUCAO}</td>
+							<td>{formatarData(entrega.DATA_ENTREGA)}</td>
 							<td>{entrega.ID_CHAVE}</td>
 							<td>{entrega.FUNCIONARIO}</td>
 							<td>{entrega.PORTEIRO}</td>

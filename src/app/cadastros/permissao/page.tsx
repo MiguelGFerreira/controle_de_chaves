@@ -3,20 +3,7 @@
 import { useEffect, useState } from 'react';
 import Modal from '@/components/Modal';
 import { deletePermissao, getChaves, getChavesRestritas, getEmployees, getPermissions, postPermissao } from '@/api';
-import { Chave } from '@/app/types';
-
-// Tipagem
-interface Employee {
-	matricula: string;
-	nome: string;
-}
-
-interface Permission {
-	ARMARIO: string;
-	NUMERO: string;
-	DESCRIÇÃO: string;
-	FUNCIONARIO: Employee;
-}
+import { Chave, Employee, Permission } from '@/app/types';
 
 const Page = () => {
 	const [permissions, setPermissions] = useState<Permission[]>([]);

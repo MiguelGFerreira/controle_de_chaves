@@ -292,11 +292,19 @@ export const getEntregaById = async (id: string) => {
 		const assinaturaPorteiroRes = await axios.get(`${API_URL}/entregas/${id}/assinatura-porteiro`, { responseType: 'blob' });
 		const assinaturaPorteiroURL = URL.createObjectURL(assinaturaPorteiroRes.data);
 
+		const assinaturaFuncionarioDevRes = await axios.get(`${API_URL}/entregas/${id}/assinatura-funcionario-dev`, { responseType: 'blob' });
+		const assinaturaFuncionarioDevURL = URL.createObjectURL(assinaturaFuncionarioDevRes.data);
+
+		const assinaturaPorteiroDevRes = await axios.get(`${API_URL}/entregas/${id}/assinatura-porteiro-dev`, { responseType: 'blob' });
+		const assinaturaPorteiroDevURL = URL.createObjectURL(assinaturaPorteiroDevRes.data);
+
 
 		return {
 			...data,
 			assinaturaFuncionario: assinaturaFuncionarioURL,
-			assinaturaPorteiro: assinaturaPorteiroURL
+			assinaturaPorteiro: assinaturaPorteiroURL,
+			assinaturaFuncionarioDev: assinaturaFuncionarioDevURL,
+			assinaturaPorteiroDev: assinaturaPorteiroDevURL,
 		};
 	} catch (error) {
 		console.error('Erro ao buscar entrega:', error);

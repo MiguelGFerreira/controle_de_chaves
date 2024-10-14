@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Modal from '@/components/Modal'
-import { getArmarios, patchArmarios } from '@/api';
-import { Armario } from '@/app/types';
+import { getArmarios, getEmployees, patchArmarios } from '@/api';
+import { Armario, Employee } from '@/app/types';
 
 const setores = ['ABE - Cozinha Industrial', 'ABE - Jardim', 'ABE - Serviços Gerais', 'Comercial - Cafuso', 'Comercial - Reserva', 'Contábil/Fiscal', 'Controladoria', 'Controle de Qualidade', 'Cultura e Gente', 'Financeiro', 'Jurídico', 'Logística - Mercado Externo', 'Logística - Mercado Interno', 'Manutenção - Civil', 'Manutenção - Elétrica', 'Manutenção - Mecânica', 'Manutenção - Utilidades', 'Meio Ambiente', 'TI', 'RH', 'SESMT', 'Suprimentos', 'PCM', 'Produção', 'Tristão Trading - Armazém', 'Tristão Trading - Escritório'];
 
@@ -17,6 +17,7 @@ const Page = () => {
   const [funcao, setFuncao] = useState('');
   const [superior, setSuperior] = useState('');
   const [data, setData] = useState(new Date().toISOString().split('T')[0])
+  const [employees, setEmployees] = useState<Employee[]>([]);
 
   const handleOpenModal = (armario: number) => {
     const selected = armarios.filter((perm) => perm.ID === armario)
@@ -29,6 +30,18 @@ const Page = () => {
     setIsModalOpen(false);
   };
 
+  const handleEmployeeChange = (nome: string) => {
+    setNome(nome);
+
+    const employee = employees.find((emp) => emp.nome === nome);
+
+    if (employee) {
+      setMatricula(employee.matricula);
+    } else {
+      setMatricula('');
+    }
+  }
+
   const handleSubmit = async () => {
     await patchArmarios(selectedArmario?.ID, data, nome, matricula, setor, funcao, superior, selectedArmario?.STATUS);
     closeModal();
@@ -40,8 +53,14 @@ const Page = () => {
     setArmarios(data);
   }
 
+  async function fetchEmployees() {
+    const data = await getEmployees();
+    setEmployees(data);
+  }
+
   useEffect(() => {
     fetchArmarios()
+    fetchEmployees()
   }, [])
 
   return (
@@ -98,11 +117,17 @@ const Page = () => {
                 <input
                   type="text"
                   id="nome"
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                  placeholder="Digite o nome"
-                  required
+                  list="employeeList"
+                  onChange={(e) => handleEmployeeChange(e.target.value)}
+                  placeholder="Digite a matrícula ou nome"
                 />
+                <datalist id="employeeList">
+                  {employees.map((employee) => (
+                    <option key={employee.matricula} value={employee.nome}>
+                      {employee.nome} - {employee.matricula}
+                    </option>
+                  ))}
+                </datalist>
               </div>
 
               <div>
@@ -111,8 +136,9 @@ const Page = () => {
                   type="text"
                   id="matricula"
                   value={matricula}
-                  onChange={(e) => setMatricula(e.target.value)}
-                  placeholder="Digite a matrícula"
+                  //onChange={(e) => setMatricula(e.target.value)}
+                  placeholder="Matrícula do funcionário"
+                  disabled
                   required
                 />
               </div>

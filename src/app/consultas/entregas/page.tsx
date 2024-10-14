@@ -2,6 +2,7 @@
 
 import { getChaves, getEntregas } from '@/api';
 import { Chave, Entregas } from '@/app/types';
+import { formatarData } from '@/utils'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -10,7 +11,7 @@ const Page = () => {
   const [chaves, setChaves] = useState<Chave[]>([])
   const [filter, setFilter] = useState({
     chave: "",
-    dateStart: new Date().toISOString().split('T')[0],
+    dateStart: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
     dateEnd: "",
   });
 
@@ -88,8 +89,8 @@ const Page = () => {
                   {entrega.ID}
                 </Link>
               </td>
-              <td>{entrega.DATA_ENTREGA}</td>
-              <td>{entrega.DATA_DEVOLUCAO}</td>
+              <td>{formatarData(entrega.DATA_ENTREGA)}</td>
+              <td>{formatarData(entrega.DATA_DEVOLUCAO)}</td>
               <td>{entrega.ID_CHAVE}</td>
               <td>{entrega.FUNCIONARIO}</td>
               <td>{entrega.PORTEIRO}</td>

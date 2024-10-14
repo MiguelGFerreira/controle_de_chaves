@@ -56,4 +56,17 @@ export interface MovimentacaoArmario {
 	Nome: string,
 	DataMovimentacao: string,
 	TipoMovimentacao: string,
+	IDAssinatura: string,
+}
+
+export interface Employee {
+	matricula: string;
+	nome: string;
+}
+
+export interface Permission {
+	ARMARIO: string;
+	NUMERO: string;
+	DESCRIÇÃO: string;
+	FUNCIONARIO: Employee;
 }
