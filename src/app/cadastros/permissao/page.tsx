@@ -40,6 +40,8 @@ const Page = () => {
 			setNewCabinet(null);
 			setNewKey(null);
 			setNewEmployee(null);
+			//fetchPermissions();
+			window.location.reload();
 		}
 	};
 

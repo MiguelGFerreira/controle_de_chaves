@@ -5,8 +5,6 @@ import Modal from '@/components/Modal'
 import { getArmariosDet, patchArmarios } from '@/api';
 import { ArmarioDet } from '@/app/types';
 
-const setores = ['ABE - Cozinha Industrial', 'ABE - Jardim', 'ABE - Serviços Gerais', 'Comercial - Cafuso', 'Comercial - Reserva', 'Contábil/Fiscal', 'Controladoria', 'Controle de Qualidade', 'Cultura e Gente', 'Financeiro', 'Jurídico', 'Logística - Mercado Externo', 'Logística - Mercado Interno', 'Manutenção - Civil', 'Manutenção - Elétrica', 'Manutenção - Mecânica', 'Manutenção - Utilidades', 'Meio Ambiente', 'TI', 'RH', 'SESMT', 'Suprimentos', 'PCM', 'Produção', 'Tristão Trading - Armazém', 'Tristão Trading - Escritório'];
-
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [armarios, setArmarios] = useState<ArmarioDet[]>([]);

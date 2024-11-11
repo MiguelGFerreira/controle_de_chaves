@@ -321,3 +321,15 @@ export const getMovimentacoesArmarios = async () => {
 		console.error('Erro ao buscar movimentacoes:', error)
 	}
 }
+
+/*
+export const getUser = async () => {
+	try{
+	  const response = await axios.get(`http://10.0.73.216:83/flask_login_ad/iis_user`)
+	  console.log(response.data);
+	  //return response.data
+	}catch(error){
+	  console.error(error);
+	}
+  }
+*/

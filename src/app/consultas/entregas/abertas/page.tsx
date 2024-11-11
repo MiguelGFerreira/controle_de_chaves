@@ -11,7 +11,7 @@ const page = () => {
 	const [chaves, setChaves] = useState<Chave[]>([])
 	const [filter, setFilter] = useState({
 		chave: "",
-		dateStart: new Date().toISOString().split('T')[0],
+		dateStart: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
 		dateEnd: "",
 	});
 
