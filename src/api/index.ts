@@ -318,7 +318,18 @@ export const getMovimentacoesArmarios = async () => {
 
 		return data;
 	} catch (error) {
-		console.error('Erro ao buscar movimentacoes:', error)
+		console.error('Erro ao buscar movimentacoes: ', error)
+	}
+}
+
+export const getAssinatura = async (idArmario: number, matricula: string) => {
+	try {
+		const assinaturaRes = await axios.get(`${API_URL}/armarios/${idArmario}/${matricula}`, { responseType: 'blob' });
+		const assinaturaFuncionarioURL = URL.createObjectURL(assinaturaRes.data);
+
+		return assinaturaFuncionarioURL
+	} catch (error) {
+		console.error("Erro ao buscar assinatura: ", error)
 	}
 }
 

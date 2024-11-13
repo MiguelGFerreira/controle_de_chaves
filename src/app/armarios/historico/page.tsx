@@ -29,6 +29,7 @@ const page = () => {
 					<tr>
 						<th>Número</th>
 						<th>Classificação</th>
+						<th>Empresa</th>
 						<th>Matrícula</th>
 						<th>Nome</th>
 						<th>Data</th>
@@ -41,6 +42,7 @@ const page = () => {
 						<tr key={index}>
 							<td>{mov.Numero}</td>
 							<td>{mov.Genero}</td>
+							<td>{mov.Empresa}</td>
 							<td>{mov.Matricula}</td>
 							<td>{mov.Nome}</td>
 							<td>{formatarData(mov.DataMovimentacao)?.split(' ')[0]}</td>

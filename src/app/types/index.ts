@@ -32,6 +32,7 @@ export interface Armario {
 	Genero: string,
 	Nome: string,
 	STATUS: string,
+	Empresa: string,
 }
 
 export interface ArmarioDet {
@@ -45,7 +46,8 @@ export interface ArmarioDet {
 	Funcao: string,
 	SuperiorImediato: string,
 	DataDevolucao: string,
-	STATUS: string
+	STATUS: string,
+	Empresa: string,
 }
 
 export interface MovimentacaoArmario {
@@ -57,6 +59,7 @@ export interface MovimentacaoArmario {
 	DataMovimentacao: string,
 	TipoMovimentacao: string,
 	IDAssinatura: string,
+	Empresa: string,
 }
 
 export interface Employee {

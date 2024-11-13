@@ -38,7 +38,7 @@ const Page = () => {
     if (employee) {
       setMatricula(employee.matricula);
     } else {
-      setMatricula('');
+      //setMatricula(''); // temporário até resolver a questão do cadastro de funcionário no novo sistema da folha
     }
   }
 
@@ -67,13 +67,13 @@ const Page = () => {
     <div className="principal">
       <h1>Armários Disponíveis</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Seção Feminino */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Seção Feminino Realcafe */}
         <div>
           <h2>Feminino</h2>
           <ul className="space-y-4">
             {armarios.map((armario) => (
-              (armario.Genero === 'F' && armario.STATUS === '0') && (
+              (armario.Genero === 'F' && armario.STATUS === '0' && armario.Empresa === 'RKF') && (
                 <li key={armario.ID} className="p-4 border bg-white shadow-sm cursor-pointer" onClick={() => handleOpenModal(armario.ID)}>
                   {armario.Numero} - Livre
                 </li>
@@ -82,12 +82,26 @@ const Page = () => {
           </ul>
         </div>
 
-        {/* Seção Masculino */}
+        {/* Seção Masculino Realcafe */}
         <div>
           <h2>Masculino</h2>
           <ul className="space-y-4">
             {armarios.map((armario) => (
-              (armario.Genero === 'M' && armario.STATUS === '0') && (
+              (armario.Genero === 'M' && armario.STATUS === '0' && armario.Empresa === 'RKF') && (
+                <li key={armario.ID} className="p-4 border bg-white shadow-sm cursor-pointer" onClick={() => handleOpenModal(armario.ID)}>
+                  {armario.Numero} - Livre
+                </li>
+              )
+            ))}
+          </ul>
+        </div>
+
+        {/* Seção Masculino Tristao */}
+        <div>
+          <h2>TCE</h2>
+          <ul className="space-y-4">
+            {armarios.map((armario) => (
+              (armario.Genero === 'M' && armario.STATUS === '0' && armario.Empresa === 'TCE') && (
                 <li key={armario.ID} className="p-4 border bg-white shadow-sm cursor-pointer" onClick={() => handleOpenModal(armario.ID)}>
                   {armario.Numero} - Livre
                 </li>
@@ -136,9 +150,9 @@ const Page = () => {
                   type="text"
                   id="matricula"
                   value={matricula}
-                  //onChange={(e) => setMatricula(e.target.value)}
+                  onChange={(e) => setMatricula(e.target.value)}
                   placeholder="Matrícula do funcionário"
-                  disabled
+                  //disabled
                   required
                 />
               </div>
