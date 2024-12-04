@@ -27,6 +27,7 @@ const page = ({ params }: { params: { slug: string } }) => {
 
 	useEffect(() => {
 		fetchEntrega()
+		console.log(entrega)
 	}, [])
 
 	if (!entrega) {
@@ -52,23 +53,37 @@ const page = ({ params }: { params: { slug: string } }) => {
 					<div className="flex space-x-4">
 						<div>
 							<p><strong>Assinatura do Funcionário:</strong></p>
-							<img src={assinaturaFunc} alt="Assinatura do Funcionário" className="w-40 h-20 object-contain" />
-
+							{!entrega.AFUNC_CAST &&
+								(<img src={assinaturaFunc} alt="Assinatura do Funcionário" className="w-40 h-20 object-contain" />)
+								||
+								(<img src={entrega.AFUNC_CAST!} alt="Assinatura do Funcionário" className="w-40 h-20 object-contain" />)
+							}
 						</div>
 						<div>
 							<p><strong>Assinatura do Porteiro:</strong></p>
-							<img src={assinaturaPort} alt="Assinatura do Porteiro" className="w-40 h-20 object-contain" />
+							{!entrega.APORT_CAST &&
+								(<img src={assinaturaPort} alt="Assinatura do Porteiro" className="w-40 h-20 object-contain" />)
+								||
+								(<img src={entrega.APORT_CAST!} alt="Assinatura do Porteiro" className="w-40 h-20 object-contain" />)
+							}
 						</div>
 						{entrega.DATA_DEVOLUCAO && (
 							<>
 								<div>
 									<p><strong>Assinatura do Funcionário Devolução:</strong></p>
-									<img src={assinaturaFuncDev} alt="Assinatura do Funcionário" className="w-40 h-20 object-contain" />
-
+									{!entrega.AFUNC_DEV_CAST &&
+										(<img src={assinaturaFuncDev} alt="Assinatura do Funcionário" className="w-40 h-20 object-contain" />)
+										||
+										(<img src={entrega.AFUNC_DEV_CAST!} alt="Assinatura do Funcionário" className="w-40 h-20 object-contain" />)
+									}
 								</div>
 								<div>
 									<p><strong>Assinatura do Porteiro Devolução:</strong></p>
-									<img src={assinaturaPortDev} alt="Assinatura do Porteiro" className="w-40 h-20 object-contain" />
+									{!entrega.APORT_DEV_CAST &&
+										(<img src={assinaturaPortDev} alt="Assinatura do Porteiro" className="w-40 h-20 object-contain" />)
+										||
+										(<img src={entrega.APORT_DEV_CAST!} alt="Assinatura do Porteiro" className="w-40 h-20 object-contain" />)
+									}
 								</div>
 							</>
 						)}

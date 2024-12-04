@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000";
+const API_URL = "http://10.0.73.216:83/controleDeChaves/express-chaves";
 
 export const getChaves = async () => {
 	try {

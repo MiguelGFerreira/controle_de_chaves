@@ -24,6 +24,10 @@ export interface EntregaDet {
 	OBSERVACOES: string,
 	assinaturaFuncionario: string,
 	assinaturaPorteiro: string,
+	AFUNC_CAST: string | null
+	APORT_CAST: string | null
+	AFUNC_DEV_CAST: string | null
+	APORT_DEV_CAST: string | null
 }
 
 export interface Armario {
