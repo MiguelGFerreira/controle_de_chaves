@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { EyeIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { formatarData } from "@/utils";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const page = () => {
 	const [movimentacoes, setMovimentacoes] = useState<MovimentacaoArmario[]>([])
@@ -19,7 +20,7 @@ const page = () => {
 		fetchChaves()
 	}, [])
 
-	if (!movimentacoes) return <div>Loading...</div>
+	if (!movimentacoes) return <LoadingSpinner />
 
 	return (
 		<div className="principal">

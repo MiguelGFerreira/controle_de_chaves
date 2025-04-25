@@ -40,13 +40,14 @@ const page = () => {
 
 	async function handleToggleRestrito(chave: Chave) {
 		const updatedRestrito = chave.RESTRITO === "SIM" ? "N" : "S";
-		await patchChave(chave.ARMARIO + chave.NUMERO, { restrito: updatedRestrito });
+		const restrito = chave.RESTRITO === "SIM" ? "S" : "N";
+		await patchChave(chave.ARMARIO + chave.NUMERO, restrito, { restrito: updatedRestrito });
 		fetchChaves();
 	}
 
 	async function handleEditDescricao() {
 		if (selectedKey) {
-			await patchChave(selectedKey.ARMARIO + selectedKey.NUMERO, { descricao: newDescricao });
+			await patchChave(selectedKey.ARMARIO + selectedKey.NUMERO, selectedKey.DESCRIÇÃO, { descricao: newDescricao });
 			setSelectedKey(null);
 			fetchChaves();
 		}

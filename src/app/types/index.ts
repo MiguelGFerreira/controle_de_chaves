@@ -5,6 +5,11 @@ export interface Chave {
 	RESTRITO: string,
 }
 
+export interface ChaveArmario {
+	ARMARIO: string,
+	DESCRICAO: string,
+}
+
 export interface Entregas {
 	ID: number,
 	DATA_ENTREGA: string,
@@ -76,4 +81,22 @@ export interface Permission {
 	NUMERO: string;
 	DESCRIÇÃO: string;
 	FUNCIONARIO: Employee;
+}
+
+export interface SegundaVia {
+	Numero: string,
+	Nome: string,
+	Empresa: string,
+	DataMovimentacao: string,
+	Dias: number,
+}
+
+export interface TceUser {
+	USUARIO: string,
+	RELATORIO: string,
+	ACESSO: string,
+	SIGLAFILIAL: string,
+	NUMEROFILIAL: string,
+	DEPARTAMENTO: string,
+	ALTERAREG: string
 }

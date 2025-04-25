@@ -1,3 +1,4 @@
+import { TceUser } from "@/app/types";
 import axios from "axios";
 
 const API_URL = "http://10.0.73.216:83/controleDeChaves/express-chaves";
@@ -10,6 +11,17 @@ export const getChaves = async () => {
 		return data;
 	} catch (error) {
 		console.error('Erro ao buscar chaves:', error)
+	}
+}
+
+export const getChavesArmarios = async () => {
+	try {
+		const res = await fetch(`${API_URL}/chavesArmarios`)
+		const data = await res.json()
+
+		return data;
+	} catch (error) {
+		console.error('Erro ao buscar chavesArmarios:', error)
 	}
 }
 
@@ -72,7 +84,7 @@ export const getEntregasAbertas = async (filters: { chave?: string, dateStart?: 
 	return res.json();
 }
 
-export const patchChave = async (id: string, operacao: { restrito?: string, descricao?: string }) => {
+export const patchChave = async (id: string, valorAntigo: string, operacao: { restrito?: string, descricao?: string }) => {
 	const myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
 	let raw = JSON.stringify({});
@@ -103,6 +115,31 @@ export const patchChave = async (id: string, operacao: { restrito?: string, desc
 	}
 
 }
+
+export const patchChaveArmario = async (id: string, descricao: string, valorAntigo?: string ) => {
+	const myHeaders = new Headers();
+	myHeaders.append("Content-Type", "application/json");
+	let raw = JSON.stringify({});
+
+	const url = `${API_URL}/chavesArmario/${id}`
+
+	raw = JSON.stringify({
+		"descricao": descricao,
+	});
+
+	try {
+		await fetch(url, {
+			method: 'PATCH',
+			headers: myHeaders,
+			body: raw,
+			redirect: 'follow',
+		});
+	} catch (error) {
+		console.error('Falha ao atualizar chaveArmario: ', error);
+	}
+
+}
+
 export const deleteChave = async (id: string) => {
 	const raw = "";
 	const url = `${API_URL}/chaves/${id}`
@@ -132,6 +169,28 @@ export const postChave = async (armario: string, numero: string, descricao: stri
 
 	fetch(
 		`${API_URL}/chaves`,
+		{
+			method: 'POST',
+			headers: myHeaders,
+			body: raw,
+			redirect: 'follow'
+		})
+		.then(response => response.text())
+		.then(result => console.log(result))
+		.catch(error => console.log('error', error));
+}
+
+export const postChaveArmario = async (armario: string, descricao: string) => {
+	const myHeaders = new Headers();
+	myHeaders.append("Content-Type", "application/json");
+
+	const raw = JSON.stringify({
+		"armario": armario,
+		"descricao": descricao,
+	});
+
+	fetch(
+		`${API_URL}/chavesArmario`,
 		{
 			method: 'POST',
 			headers: myHeaders,
@@ -333,14 +392,37 @@ export const getAssinatura = async (idArmario: number, matricula: string) => {
 	}
 }
 
-/*
-export const getUser = async () => {
-	try{
-	  const response = await axios.get(`http://10.0.73.216:83/flask_login_ad/iis_user`)
-	  console.log(response.data);
-	  //return response.data
-	}catch(error){
-	  console.error(error);
+export const getRelatorioSegundaVia = async () => {
+	try {
+		const response = await axios.get(`${API_URL}/armarios/segundaVia/relatorio`);
+		return response.data;
+	} catch (error) {
+		console.error('Erro ao buscar segunda via: ', error);
 	}
-  }
-*/
+}
+
+
+export const getUser = async () => {
+	try {
+		const response = await axios.get(`http://10.0.73.216:83/flask_login_ad/iis_user`)
+		console.log(response);
+		//console.log(response.data);
+		return response.data
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+export const getTceUser = async (data: any) => {
+	console.log(data)
+	try {
+		const response = await axios.post(`http://10.0.73.216:83/flask_login_ad/tce_user`, data)
+		console.log(response.data);
+		const tceUserData: TceUser = response.data[0] || {} as TceUser
+		//tceUserData = tceUserData? tceUserData :
+		return tceUserData
+	} catch (error) {
+		console.error(error);
+		return {} as TceUser
+	}
+}

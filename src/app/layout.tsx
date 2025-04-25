@@ -1,18 +1,6 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 export const metadata: Metadata = {
   title: "Controle de Chaves",
@@ -35,6 +23,7 @@ const pages = [
       [
         { name: "Armários Disponíveis", path: "/armarios/disponiveis" },
         { name: "Armários Ocupados", path: "/armarios/ocupados" },
+        { name: "Segunda via", path: "/armarios/segundaVia" },
         { name: "Histórico", path: "/armarios/historico" },
       ]
   }
@@ -45,6 +34,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html lang="pt-Br">
       <body>

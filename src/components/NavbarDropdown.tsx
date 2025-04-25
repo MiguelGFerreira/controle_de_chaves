@@ -2,6 +2,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
+import React from "react";
 
 interface Props {
 	option: string;
@@ -9,11 +10,11 @@ interface Props {
 	className?: string;
 }
 
-const NavbarDropdown = ({ option, pages, className }: Props) => {
+const NavbarDropdown = React.memo(({ option, pages, className }: Props) => {
 	return (
 		<div>
 			<Menu>
-				<MenuButton className={`${className} flex text-white`}>
+				<MenuButton className={`${className} flex text-white`} aria-label={`Abrir menu de ${option}`} >
 					{option}
 					<ChevronDownIcon
 						className="h-8 w-8 text-white"
@@ -52,6 +53,6 @@ const NavbarDropdown = ({ option, pages, className }: Props) => {
 			</Menu>
 		</div>
 	);
-};
+});
 
 export default NavbarDropdown;

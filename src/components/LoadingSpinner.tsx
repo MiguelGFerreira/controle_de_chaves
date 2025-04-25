@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import spinner from '../assets/images/spinner.png'
+import spinner from '../assets/spinner.png'
 
 const LoadingSpinner = () => {
 	return (
