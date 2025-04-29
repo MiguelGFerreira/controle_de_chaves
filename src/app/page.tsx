@@ -21,7 +21,7 @@ export default function Home() {
 					setUserName(userNameResponse);
 
 					// Depois, chama getTceUser com o username
-					const tceUserResponse = await getTceUser({ 'USER': `REALCAFE\\${userNameResponse}`, 'RELATORIO': "CONTATOSRECALL" });
+					const tceUserResponse = await getTceUser({ 'USER': `REALCAFE\\${userNameResponse}`, 'RELATORIO': "CONTROLEDECHAVES" });
 
 					// Atualiza o estado com o usuário do TCE
 					setTceUser(tceUserResponse);

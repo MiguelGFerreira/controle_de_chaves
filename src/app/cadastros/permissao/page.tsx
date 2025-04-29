@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import Modal from '@/components/Modal';
-import { deletePermissao, getChaves, getChavesRestritas, getEmployees, getPermissions, postPermissao } from '@/api';
-import { Chave, Employee, Permission } from '@/app/types';
+import { deletePermissao, getChaves, getChavesArmarios, getChavesRestritas, getEmployees, getPermissions, postPermissao } from '@/api';
+import { Chave, ChaveArmario, Employee, Permission } from '@/app/types';
 
 const Page = () => {
 	const [permissions, setPermissions] = useState<Permission[]>([]);
 	const [keysByCabinet, setKeysByCabinet] = useState<Record<string, string[]>>({});
 	const [chavesRestritas, setChavesRestritas] = useState<Chave[]>([]);
+	const [cabinet, setCabinet] = useState<ChaveArmario[]>([]);
 	const [newCabinet, setNewCabinet] = useState<string | null>(null);
 	const [newKey, setNewKey] = useState<string | null>(null);
 	const [newEmployee, setNewEmployee] = useState<string | null>(null);
@@ -65,6 +66,11 @@ const Page = () => {
 		setKeysByCabinet(keysByCabinet);
 	}
 
+	async function fetchChavesArmarios() {
+		const data = await getChavesArmarios();
+		setCabinet(data);
+	}
+
 	async function fetchChavesRestritas() {
 		const data = await getChavesRestritas();
 		setChavesRestritas(data);
@@ -82,6 +88,7 @@ const Page = () => {
 
 	useEffect(() => {
 		fetchChaves()
+		fetchChavesArmarios()
 		fetchChavesRestritas()
 		fetchPermissions()
 		fetchEmployees()
@@ -102,10 +109,12 @@ const Page = () => {
 							value={newCabinet ?? ''}
 							onChange={(e) => setNewCabinet(e.target.value)}
 						>
-							<option value="">Selecione um armário</option>
-							<option value="01">Armário 01</option>
-							<option value="02">Armário 02</option>
-							<option value="03">Armário 03</option>
+							<option value="">Selecione uma chave</option>
+							{cabinet.map((armario) => (
+								<option key={armario.ARMARIO} value={armario.ARMARIO}>
+									{armario.DESCRICAO}
+								</option>
+							))}
 						</select>
 					</div>
 

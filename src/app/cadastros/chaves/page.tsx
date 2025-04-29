@@ -1,7 +1,7 @@
 "use client"
 
-import { deleteChave, getChaves, patchChave, postChave } from "@/api";
-import { Chave } from "@/app/types";
+import { deleteChave, getChaves, getChavesArmarios, patchChave, postChave } from "@/api";
+import { Chave, ChaveArmario } from "@/app/types";
 import Modal from "@/components/Modal";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/20/solid";
@@ -11,6 +11,7 @@ import { Checkbox } from '@headlessui/react'
 const page = () => {
 	const [chaves, setChaves] = useState<Chave[]>([]);
 	const [armario, setArmario] = useState("");
+	const [cabinet, setCabinet] = useState<ChaveArmario[]>([]);
 	const [newKey, setNewKey] = useState("");
 	const [description, setDescription] = useState("");
 	const [restrito, setRestrito] = useState(false);
@@ -31,6 +32,11 @@ const page = () => {
 	async function fetchChaves() {
 		const data = await getChaves();
 		setChaves(data);
+	}
+
+	async function fetchChavesArmarios() {
+		const data = await getChavesArmarios();
+		setCabinet(data);
 	}
 
 	async function handleDelete(id: string) {
@@ -55,6 +61,7 @@ const page = () => {
 
 	useEffect(() => {
 		fetchChaves()
+		fetchChavesArmarios()
 	}, [])
 
 	if (!chaves) return <div>Loading...</div>
@@ -77,10 +84,12 @@ const page = () => {
 							value={armario ?? ''}
 							onChange={(e) => setArmario(e.target.value)}
 						>
-							<option value="">Selecione um armário</option>
-							<option value={"01"}>Armário 01</option>
-							<option value={"02"}>Armário 02</option>
-							<option value={"03"}>Armário 03</option>
+							<option value="">Selecione uma chave</option>
+							{cabinet.map((armario) => (
+								<option key={armario.ARMARIO} value={armario.ARMARIO}>
+									{armario.DESCRICAO}
+								</option>
+							))}
 						</select>
 					</div>
 
