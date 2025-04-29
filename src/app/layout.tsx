@@ -16,6 +16,7 @@ const pages = [
         { name: "Entregas em aberto", path: "/consultas/entregas/abertas" },
         { name: "Cadastro de chaves", path: "/cadastros/chaves" },
         { name: "Cadastro de permissão", path: "/cadastros/permissao" },
+        { name: "Cadastro de armários de chaves", path: "/cadastros/chavesArmarios" },
       ]
   },
   {

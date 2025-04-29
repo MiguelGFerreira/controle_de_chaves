@@ -1,19 +1,26 @@
 "use client"
 
-import { deleteChave, getChaves, getChavesArmarios, patchChave, patchChaveArmario, postChave, postChaveArmario } from "@/api";
+import { deleteChaveArmario, getChavesArmarios, patchChaveArmario, postChaveArmario } from "@/api";
 import { ChaveArmario } from "@/app/types";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import Modal from "@/components/Modal";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 
 const page = () => {
 	const [armarios, setArmarios] = useState<ChaveArmario[]>([]);
-	const [armario, setArmario] = useState("");
-	const [newKey, setNewKey] = useState("");
-	const [description, setDescription] = useState("");
 	const [newDescricao, setNewDescricao] = useState<string>("");
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedKey, setSelectedKey] = useState<ChaveArmario | null>(null);
+
+	const [formValues, setFormValues] = useState({
+		armario: '',
+		description: '',
+	});
+	const [errors, setErrors] = useState({
+		armario: false,
+		description: false,
+	});
 
 	const openModal = (key: ChaveArmario) => {
 		setSelectedKey(key);
@@ -25,47 +32,70 @@ const page = () => {
 		setIsModalOpen(false);
 	};
 
-	async function fetchChaves() {
-		const data = await getChaves();
+	async function fetchArmarios() {
+		const data = await getChavesArmarios();
 		setArmarios(data);
 	}
 
 	async function handleDelete(id: string) {
-		await deleteChave(id);
-		fetchChaves();
+		await deleteChaveArmario(id);
+		fetchArmarios();
 	}
 
 	async function handleEditDescricao() {
 		if (selectedKey) {
-			await patchChaveArmario(selectedKey.ARMARIO, newDescricao);
-			setSelectedKey(null);
-			fetchChaves();
+			if (newDescricao) {
+				await patchChaveArmario(selectedKey.ARMARIO, newDescricao);
+				setSelectedKey(null);
+				fetchArmarios();
+			} else {
+				document.getElementById("erro-newDescription")!.hidden = false;
+			}
 		}
 	}
 
+	const handleFieldChange = (field: string, value: string) => {
+		setErrors((prevErrors) => ({ ...prevErrors, [field]: false }));
+		setFormValues((prevValues) => ({ ...prevValues, [field]: value }));
+	}
+
+	const validateForm = () => {
+		const { armario, description,  } = formValues;
+		return {
+			armario: !armario,
+			description: !description,
+		};
+	};
+
+	async function handleAddCabinet() {
+		const validationErrors = validateForm();
+		setErrors(validationErrors);
+
+		if (Object.values(validationErrors).includes(true)) return;
+
+		postChaveArmario(formValues.armario, formValues.description);
+		fetchArmarios();
+	}
+
 	useEffect(() => {
-		fetchChaves()
+		fetchArmarios()
 	}, [])
 
-	if (!armarios) return <div>Loading...</div>
-
-	async function handleAddKey() {
-		await postChaveArmario(armario, description);
-		fetchChaves();
-	}
+	if (!armarios) return <LoadingSpinner />
 
 	return (
 		<div className="principal">
-			<h1>Cadastro de Armarios</h1>
+			<h1>Cadastro de Armarios de Chaves</h1>
 			<div className="card">
 				<div className="formulario">
-					{/* Chave */}
+					{/* Armário */}
 					<div>
-						<label htmlFor="cabinet">Chave</label>
+						<label htmlFor="cabinet">Armário</label>
 						<input
 							type="text"
 							placeholder="Digite o armario"
-							onChange={(e) => setNewKey(e.target.value)}
+							className={`${errors.armario ? 'border-red-500': `border-gray-300`}`}
+							onChange={(e) => handleFieldChange('armario', e.target.value)}
 						/>
 					</div>
 
@@ -75,13 +105,14 @@ const page = () => {
 						<input
 							type="text"
 							placeholder="Digite a Descrição"
-							onChange={(e) => setDescription(e.target.value)}
+							className={`${errors.description ? 'border-red-500': `border-gray-300`}`}
+							onChange={(e) => handleFieldChange('description', e.target.value)}
 						/>
 					</div>
 				</div>
 
 
-				<button onClick={handleAddKey}>
+				<button onClick={handleAddCabinet}>
 					Adicionar Armario
 				</button>
 			</div>
@@ -129,6 +160,7 @@ const page = () => {
 						onChange={(e) => setNewDescricao(e.target.value)}
 						className="input"
 					/>
+					<p id="erro-newDescription" className="text-red-500" hidden>Este campo deve ser preenchido</p>
 					<button onClick={handleEditDescricao} className="button">
 						Salvar
 					</button>
