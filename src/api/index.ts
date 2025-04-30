@@ -196,7 +196,7 @@ export const patchChaveArmario = async (id: string, descricao: string ) => {
 	myHeaders.append("Content-Type", "application/json");
 	let raw = JSON.stringify({});
 
-	const url = `${API_URL}/chavesArmario/${id}`
+	const url = `${API_URL}/chavesArmarios/${id}`
 
 	raw = JSON.stringify({
 		"descricao": descricao,
@@ -225,7 +225,7 @@ export const postChaveArmario = async (armario: string, descricao: string) => {
 	});
 
 	fetch(
-		`${API_URL}/chavesArmario`,
+		`${API_URL}/chavesArmarios`,
 		{
 			method: 'POST',
 			headers: myHeaders,
@@ -239,7 +239,7 @@ export const postChaveArmario = async (armario: string, descricao: string) => {
 
 export const deleteChaveArmario = async (id: string) => {
 	const raw = "";
-	const url = `${API_URL}/chavesArmario/${id}`
+	const url = `${API_URL}/chavesArmarios/${id}`
 
 	try {
 		await fetch(url, {
