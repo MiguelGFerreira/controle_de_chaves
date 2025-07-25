@@ -12,20 +12,21 @@ const defaultPages = [
 				{ name: "Consulta de chaves", path: "/consultas/chaves" },
 				{ name: "Consulta de entregas", path: "/consultas/entregas" },
 				{ name: "Entregas em aberto", path: "/consultas/entregas/abertas" },
-				// { name: "Cadastro de chaves", path: "/cadastros/chaves" },
-				// { name: "Cadastro de permissão", path: "/cadastros/permissao" },
-				// { name: "Cadastro de armários de chaves", path: "/cadastros/chavesArmarios" },
+				{ name: "Cadastro de chaves", path: "/cadastros/chaves" },
+				{ name: "Cadastro de permissão", path: "/cadastros/permissao" },
+				{ name: "Cadastro de armários de chaves", path: "/cadastros/chavesArmarios" },
 			]
 	},
-	//   {
-	//     name: "Armários dos Vestiários", path: "", options:
-	//       [
-	//         { name: "Armários Disponíveis", path: "/armarios/disponiveis" },
-	//         { name: "Armários Ocupados", path: "/armarios/ocupados" },
-	//         { name: "Segunda via", path: "/armarios/segundaVia" },
-	//         { name: "Histórico", path: "/armarios/historico" },
-	//       ]
-	//   }
+	  {
+	    name: "Armários dos Vestiários", path: "", options:
+	      [
+	        { name: "Armários Disponíveis", path: "/armarios/disponiveis" },
+	        { name: "Armários Ocupados", path: "/armarios/ocupados" },
+	        { name: "Segunda via", path: "/armarios/segundaVia" },
+	        { name: "Histórico", path: "/armarios/historico" },
+	        { name: "Cadastro", path: "/armarios/cadastro" },
+	      ]
+	  }
 ]
 
 export default function NavbarWrapper(props: { className?: string }) {
